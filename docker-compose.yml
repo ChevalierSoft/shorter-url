@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  shorter-url:
+    build: './app'
+    volumes:
+      - ./app:/go/src/app
+    command: "ls"
+    ports:
+      - "80:80"
