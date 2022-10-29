@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -20,6 +21,23 @@ import (
 // 	}
 // 	c.IndentedJSON(http.StatusOK, user)
 // }
+
+func setLink(c *gin.Context) {
+
+	var newLink Link
+
+	if err := c.BindJSON(&newLink); err != nil {
+		return	
+	}
+
+	_, err := G_db.Model(&newLink).Insert()
+	if err != nil {
+		fmt.Println("initDBModel: ", err)
+	}
+
+	c.IndentedJSON(http.StatusCreated, newLink)
+	
+}
 
 func getLinks(c *gin.Context) {
 	var links []Link

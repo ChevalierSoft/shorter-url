@@ -18,7 +18,7 @@ var G_db = pg.Connect(&pg.Options{
 
 type Link struct {
 	Uuid uuid.UUID `json:"type:uuid" pg:",pk"`
-	Link string
+	Link string `json:"type:string"`
 }
 
 // createSchema creates database schemas
