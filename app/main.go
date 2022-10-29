@@ -47,6 +47,6 @@ func main() {
 
 	router.GET("/", getLinks)
 
-	router.Run("8080")
+	router.Run(":80")
 
 }

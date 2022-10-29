@@ -29,4 +29,4 @@ services:
     volumes:
       - ./app:/go/src/app
     ports:
-      - "80:8080"
+      - "80:80"
