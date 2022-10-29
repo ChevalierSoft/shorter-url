@@ -5,10 +5,9 @@ RUN ls -l
 
 WORKDIR /go/src/app
 
-# COPY ./setup.sh /tmp/
+COPY ./setup.sh /go/src/app/
 
-# CMD [ "/tmp/setup.sh"]
-# ENTRYPOINT [ "./setup.sh" ]
-ENTRYPOINT [ "./shorter-url" ]
+ENTRYPOINT [ "./setup.sh" ]
+#ENTRYPOINT [ "./shorter-url" ]
 
 EXPOSE 80 8080
