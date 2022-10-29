@@ -8,6 +8,7 @@ WORKDIR /go/src/app
 # COPY ./setup.sh /tmp/
 
 # CMD [ "/tmp/setup.sh"]
-ENTRYPOINT [ "./setup.sh" ]
+# ENTRYPOINT [ "./setup.sh" ]
+ENTRYPOINT [ "./shorter-url" ]
 
-EXPOSE 80
+EXPOSE 80 8080
