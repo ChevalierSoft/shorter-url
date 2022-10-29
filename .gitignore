@@ -1,4 +1,7 @@
 *.env
+*.sw[ponm]
+shorter-url
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
