@@ -22,7 +22,7 @@ import (
 // 	c.IndentedJSON(http.StatusOK, user)
 // }
 
-func setLink(c *gin.Context) {
+func setNewLink(c *gin.Context) {
 
 	var newLink Link
 
@@ -64,6 +64,7 @@ func main() {
 	router.Use(cors.Default())
 
 	router.GET("/", getLinks)
+	router.POST("/", setNewLink)
 
 	router.Run(":80")
 
