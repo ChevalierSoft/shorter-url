@@ -8,6 +8,7 @@ require (
 	github.com/go-pg/pg v8.0.7+incompatible
 	github.com/go-pg/pg/v10 v10.10.7
 	github.com/google/uuid v1.3.0
+	github.com/sirupsen/logrus v1.9.0
 	github.com/uptrace/bun v1.1.8
 	github.com/uptrace/bun/dialect/pgdialect v1.1.8
 	github.com/uptrace/bun/driver/pgdriver v1.1.8

@@ -28,15 +28,13 @@ func main() {
 	router := NewHttpController(db)
 	router.Use(cors.Default())
 
-	// add a get route to get all links
-
-	// if not in production
+	// ? if not in production
 	if gin.Mode() != gin.ReleaseMode {
 		// todo: add pagination
 		router.GET("/", router.getLinks) // ? debug : get all links
 	}
-
 	router.POST("/", router.setNewLink)
+	router.GET("/:id", router.getLink)
 
 	router.Run(":80")
 }
