@@ -22,7 +22,10 @@ func (controller *HttpController) setNewLink(c *gin.Context) {
 		return
 	}
 	link := Link{Url: input.Url}
-	// bite, err :=
+	if link.Url == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Url is required"})
+		return
+	}
 	_, err := controller.Database.NewInsert().Model(&link).Exec(c)
 	if err != nil {
 		log.Fatal(err)
