@@ -16,7 +16,6 @@ func NewHttpController(db *bun.DB) *HttpController {
 }
 
 func main() {
-
 	// gin.SetMode(gin.ReleaseMode)
 
 	db := connectDB()
@@ -31,7 +30,12 @@ func main() {
 
 	// add a get route to get all links
 
-	router.GET("/", router.getLinks)
+	// if not in production
+	if gin.Mode() != gin.ReleaseMode {
+		// todo: add pagination
+		router.GET("/", router.getLinks) // ? debug : get all links
+	}
+
 	router.POST("/", router.setNewLink)
 
 	router.Run(":80")
