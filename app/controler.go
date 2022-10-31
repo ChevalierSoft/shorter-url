@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,7 +27,12 @@ func (controller *HttpController) setNewLink(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Url is required"})
 		return
 	}
-	_, err := controller.Database.NewInsert().Model(&link).Exec(c)
+	_, err := url.ParseRequestURI(link.Url)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Url is not valid"})
+		return
+	}
+	_, err = controller.Database.NewInsert().Model(&link).Exec(c)
 	if err != nil {
 		log.Fatal(err)
 	}
