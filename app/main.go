@@ -1,71 +1,38 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/uptrace/bun"
 )
 
-// func getLinkByID(c *gin.Context) {
-// 	id, _ := strconv.Atoi(c.Param("id"))
-
-// 	user := &Link{Id: id}
-// 	err := G_db.Model(user).WherePK().Select()
-// 	if err != nil {
-// 		log.Printf("getLinkByID: %v : %v", user.Id, err)
-// 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Link not found"})
-// 		return
-// 	}
-// 	c.IndentedJSON(http.StatusOK, user)
-// }
-
-func setNewLink(c *gin.Context) {
-
-	var newLink Link
-
-	if err := c.BindJSON(&newLink); err != nil {
-		return	
-	}
-
-	_, err := G_db.Model(&newLink).Insert()
-	if err != nil {
-		fmt.Println("initDBModel: ", err)
-	}
-
-	c.IndentedJSON(http.StatusCreated, newLink)
-	
+type HttpController struct {
+	*gin.Engine
+	Database *bun.DB
 }
 
-func getLinks(c *gin.Context) {
-	var links []Link
-	err := G_db.Model(&links).Select()
-	if err != nil {
-		log.Println(err)
-		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Link not found"})
-	}
-	c.IndentedJSON(http.StatusOK, links)
+func NewHttpController(db *bun.DB) *HttpController {
+	return &HttpController{Database: connectDB(), Engine: gin.New()}
 }
 
 func main() {
 
 	// gin.SetMode(gin.ReleaseMode)
 
-	// err :=
-	createSchema(G_db)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	defer G_db.Close()
+	db := connectDB()
+	err := createSchema(db)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 
-	router := gin.New()
+	router := NewHttpController(db)
 	router.Use(cors.Default())
 
-	router.GET("/", getLinks)
-	router.POST("/", setNewLink)
+	// add a get route to get all links
+
+	router.GET("/", router.getLinks)
+	router.POST("/", router.setNewLink)
 
 	router.Run(":80")
-
 }

@@ -1,46 +1,70 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"database/sql"
 	"os"
 
-	"github.com/go-pg/pg/v10"
-	"github.com/go-pg/pg/v10/orm"
-	"github.com/google/uuid"
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/driver/pgdriver"
 )
 
-var G_db = pg.Connect(&pg.Options{
-	User:     os.Getenv("POSTGRES_USER"),
-	Password: os.Getenv("POSTGRES_PASSWORD"),
-	Database: os.Getenv("POSTGRES_DB"),
-	Addr:     os.Getenv("POSTGRES_HOST") + ":" + os.Getenv("POSTGRES_PORT"),
-})
+// connectDB connects to the database using bun
+func connectDB() *bun.DB {
+	// pgconn := pgdriver.NewConnector(
+	// 	pgdriver.WithAddr(os.Getenv("POSTGRES_HOST")+"=:"+os.Getenv("POSTGRES_PORT")),
+	// 	pgdriver.WithUser(os.Getenv("POSTGRES_USER")),
+	// 	pgdriver.WithPassword(os.Getenv("POSTGRES_PASSWORD")),
+	// 	pgdriver.WithDatabase(os.Getenv("POSTGRES_DB")),
+	// )
+	// db := bun.NewDB(pgdriver.NewConnector(pgdriver.WithDSN(pgconn)), pgdialect.New())
+	// db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose()))
 
-type Link struct {
-	Uuid uuid.UUID `json:"type:uuid" pg:",pk"`
-	Link string `json:"type:string"`
+	dsn := "postgres://" + os.Getenv("POSTGRES_USER") + ":" + os.Getenv("POSTGRES_PASSWORD") + "@" + os.Getenv("POSTGRES_HOST") + ":" + os.Getenv("POSTGRES_PORT") + "/" + os.Getenv("POSTGRES_DB") + "?sslmode=disable"
+	pgdb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	db := bun.NewDB(pgdb, pgdialect.New())
+	// if err := db.Ping(); err != nil {
+	// 	panic(err)
+	// }
+	return db
 }
 
-// createSchema creates database schemas
-func createSchema(db *pg.DB) error {
+func createSchema(db *bun.DB) error {
+	// models := []interface{}{
+	// 	(*Link)(nil),
+	// }
+	// for _, model := range models {
+	// 	err := db.CreateTable(model, &orm.CreateTableOptions{
+	// 		Temp:        false,
+	// 		IfNotExists: true,
+	// 	})
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
 
-	fmt.Println("pg", G_db)
+	// for _, model := range models {
+	// 	db.RegisterModel(model)
+	// }
 
-	models := []interface{}{
-		(*Link)(nil),
+	// create table if not exists using bun
+	// res, err := db.NewCreateTable().Model((*Link)(nil)).IfNotExists().Exec(context.Background())
+
+	createExtention := "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
+	_, err := db.Exec(createExtention)
+	if err != nil {
+		panic(err)
 	}
 
-	for _, model := range models {
-		exists, _ := db.Model(model).Exists()
-		if exists {
-			fmt.Printf("table <%T> exists -> %v\n", model, exists)
-			continue
-		}
-
-		err := db.Model(model).CreateTable(&orm.CreateTableOptions{})
-		if err != nil {
-			return err
-		}
+	_, err = db.NewCreateTable().
+		Model((*Link)(nil)).
+		IfNotExists().
+		Varchar(500).
+		Exec(context.Background())
+	if err != nil {
+		panic(err)
 	}
+
 	return nil
 }
