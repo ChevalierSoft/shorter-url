@@ -16,7 +16,9 @@ func NewHttpController(db *bun.DB) *HttpController {
 }
 
 func main() {
-	// gin.SetMode(gin.ReleaseMode)
+	// if os.Getenv("PRODUCTION") == "true" {
+	// 	gin.SetMode(gin.ReleaseMode)
+	// }
 
 	db := connectDB()
 	err := createSchema(db)
