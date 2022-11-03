@@ -1,7 +1,19 @@
+basePath: /api/v1
+definitions:
+  main.LinkDto:
+    properties:
+      url:
+        type: string
+    required:
+    - url
+    type: object
 info:
   contact: {}
+  description: This is a simple url shortener api
+  title: shorter-url API
+  version: 0.1.0
 paths:
-  /link:
+  /l:
     get:
       description: get every link in database when the api in not in production mode
       produces:
@@ -11,4 +23,44 @@ paths:
           description: OK
           schema:
             type: json
+    post:
+      description: register a new link
+      parameters:
+      - description: Link to register
+        in: body
+        name: link
+        required: true
+        schema:
+          $ref: '#/definitions/main.LinkDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+        "400":
+          description: Url is not valid
+          schema:
+            type: string
+  /l/{id}:
+    get:
+      description: get a link by id
+      parameters:
+      - description: Link ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "301":
+          description: Redirect to the link
+          schema:
+            type: string
+        "404":
+          description: Link not found
+          schema:
+            type: string
 swagger: "2.0"

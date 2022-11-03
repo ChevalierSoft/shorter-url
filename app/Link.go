@@ -9,3 +9,7 @@ type Link struct {
 	Visits    int       `bun:",notnull,default:0"`
 	LastVisit string    `bun:"type:timestamp,default:now()"`
 }
+
+type LinkDto struct {
+	Url string `json:"url" binding:"required"`
+}

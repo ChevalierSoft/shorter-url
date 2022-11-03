@@ -1,10 +1,14 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a simple url shortener api",
+        "title": "shorter-url API",
+        "contact": {},
+        "version": "0.1.0"
     },
+    "basePath": "/api/v1",
     "paths": {
-        "/link": {
+        "/l": {
             "get": {
                 "description": "get every link in database when the api in not in production mode",
                 "produces": [
@@ -17,6 +21,81 @@
                             "type": "json"
                         }
                     }
+                }
+            },
+            "post": {
+                "description": "register a new link",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "description": "Link to register",
+                        "name": "link",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.LinkDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "json"
+                        }
+                    },
+                    "400": {
+                        "description": "Url is not valid",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/l/{id}": {
+            "get": {
+                "description": "get a link by id",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Link ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "301": {
+                        "description": "Redirect to the link",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Link not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.LinkDto": {
+            "type": "object",
+            "required": [
+                "url"
+            ],
+            "properties": {
+                "url": {
+                    "type": "string"
                 }
             }
         }

@@ -15,4 +15,4 @@ POSTGRES_PASSWORD=yourPassword
 Then use `docker-compose up`
 
 ## API
-the API documentation is available at http://localhost:12345/swagger/
+the API documentation is available at url to access swagger : http://localhost:80/swagger/index.html
