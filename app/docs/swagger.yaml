@@ -1,0 +1,14 @@
+info:
+  contact: {}
+paths:
+  /link:
+    get:
+      description: get every link in database when the api in not in production mode
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+swagger: "2.0"

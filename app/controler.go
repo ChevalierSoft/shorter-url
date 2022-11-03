@@ -9,6 +9,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// @BasePath /api/v1
+
+// shorter-url godoc
+// @Description get every link in database when the api in not in production mode
+// @Produce json
+// @Success 200 {json} []Link
+// @Router /link [get]
 func (controller *HttpController) getLinks(c *gin.Context) {
 	var links []Link
 	if err := controller.Database.NewSelect().Model(&links).Scan(c); err != nil {
