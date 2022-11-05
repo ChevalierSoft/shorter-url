@@ -3,7 +3,7 @@ An app to make shorter URL
 
 ## Quick start
 
-you need an env in the root directory like :
+you need a `.env` in the root directory like :
 
 ```
 API_PORT=12345
@@ -15,4 +15,4 @@ POSTGRES_PASSWORD=yourPassword
 Then use `docker-compose up`
 
 ## API
-the API documentation is available at url to access swagger : http://localhost:80/swagger/index.html
+Once running, the API documentation (swagger) is available at this url : http://localhost:80/swagger/index.html
