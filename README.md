@@ -3,7 +3,7 @@ An app to make shorter URL
 
 ## Quick start
 
-you need an env like :
+you need an env in the root directory like :
 
 ```
 API_PORT=12345
