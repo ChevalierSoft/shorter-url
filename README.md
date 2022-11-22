@@ -7,7 +7,7 @@ you need a `.env` in the root directory like :
 
 ```
 API_PORT=12345
-POSTGRES_DB="shorter-url"
+POSTGRES_DB="shorter_url"
 POSTGRES_USER=yourUser
 POSTGRES_PASSWORD=yourPassword
 ```
