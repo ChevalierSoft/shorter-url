@@ -7,6 +7,7 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	bun "github.com/uptrace/bun"
+	"os"
 )
 
 type HttpController struct {
@@ -23,9 +24,9 @@ func NewHttpController(db *bun.DB) *HttpController {
 // @version 0.1.0
 // @BasePath /api/v1
 func main() {
-	// if os.Getenv("PRODUCTION") == "true" {
-	// 	gin.SetMode(gin.ReleaseMode)
-	// }
+	if os.Getenv("PRODUCTION") == "true" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	db := connectDB()
 	err := createSchema(db)
@@ -54,5 +55,5 @@ func main() {
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	router.Run(":80")
+	router.Run(":12345")
 }
