@@ -1,22 +1,25 @@
 package main
 
 import (
+	"os"
+
 	docs "github.com/ChevalierSoft/shorter-url/docs"
+	"github.com/Shopify/sarama"
 	cors "github.com/gin-contrib/cors"
 	gin "github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	bun "github.com/uptrace/bun"
-	"os"
 )
 
 type HttpController struct {
 	*gin.Engine
 	Database *bun.DB
+	Producer *sarama.SyncProducer
 }
 
-func NewHttpController(db *bun.DB) *HttpController {
-	return &HttpController{Database: connectDB(), Engine: gin.New()}
+func NewHttpController() *HttpController {
+	return &HttpController{Database: connectDB(), Engine: gin.New(), Producer: setProducer()}
 }
 
 // @title shorter-url API
@@ -28,15 +31,17 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	db := connectDB()
-	err := createSchema(db)
+	router := NewHttpController()
+	router.Use(cors.Default())
+
+	// ? init db
+	err := createSchema(router.Database)
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
+	defer router.Database.Close()
 
-	router := NewHttpController(db)
-	router.Use(cors.Default())
+	// ? init red panda
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
