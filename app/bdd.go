@@ -21,16 +21,19 @@ func connectDB() *bun.DB {
 }
 
 func createSchema(db *bun.DB) error {
+	// ? list of models
 	models := []interface{}{
 		(*Link)(nil),
 	}
 
+	// ? enable uuid in postgres
 	createExtention := "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
 	_, err := db.Exec(createExtention)
 	if err != nil {
 		panic(err)
 	}
 
+	// ? create tables with models
 	for _, model := range models {
 		_, err = db.NewCreateTable().
 			Model(model).

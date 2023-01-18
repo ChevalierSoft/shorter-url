@@ -14,12 +14,34 @@ import (
 
 type HttpController struct {
 	*gin.Engine
-	Database *bun.DB
+	DB       *bun.DB
 	Producer *sarama.SyncProducer
 }
 
 func NewHttpController() *HttpController {
-	return &HttpController{Database: connectDB(), Engine: gin.New(), Producer: setProducer()}
+	return &HttpController{DB: connectDB(), Engine: gin.New(), Producer: setProducer()}
+}
+
+func checkEnv() {
+	if os.Getenv("POSTGRES_USER") == "" {
+		panic("env 'POSTGRES_USER' is not set")
+	}
+	if os.Getenv("POSTGRES_PASSWORD") == "" {
+		panic("env 'POSTGRES_PASSWORD' is not set")
+	}
+	if os.Getenv("POSTGRES_HOST") == "" {
+		panic("env 'POSTGRES_HOST' is not set")
+	}
+	if os.Getenv("POSTGRES_PORT") == "" {
+		panic("env 'POSTGRES_PORT' is not set")
+	}
+	if os.Getenv("POSTGRES_DB") == "" {
+		panic("env 'POSTGRES_DB' is not set")
+	}
+	// ? release mode for gin condition
+	if os.Getenv("PRODUCTION") == "true" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 }
 
 // @title shorter-url API
@@ -27,19 +49,18 @@ func NewHttpController() *HttpController {
 // @version 0.1.0
 // @BasePath /api/v1
 func main() {
-	if os.Getenv("PRODUCTION") == "true" {
-		gin.SetMode(gin.ReleaseMode)
-	}
+
+	checkEnv()
 
 	router := NewHttpController()
 	router.Use(cors.Default())
 
 	// ? init db
-	err := createSchema(router.Database)
+	err := createSchema(router.DB)
 	if err != nil {
 		panic(err)
 	}
-	defer router.Database.Close()
+	defer router.DB.Close()
 
 	// ? init red panda
 
