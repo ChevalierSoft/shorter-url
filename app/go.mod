@@ -10,6 +10,7 @@ require (
 	github.com/go-pg/pg v8.0.7+incompatible
 	github.com/go-pg/pg/v10 v10.10.7
 	github.com/google/uuid v1.3.0
+	github.com/segmentio/kafka-go v0.4.38
 	github.com/sirupsen/logrus v1.9.0
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
 	github.com/swaggo/gin-swagger v1.5.3

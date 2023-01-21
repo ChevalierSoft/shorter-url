@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-
 	docs "github.com/ChevalierSoft/shorter-url/docs"
 	"github.com/Shopify/sarama"
 	cors "github.com/gin-contrib/cors"
@@ -27,9 +25,8 @@ func NewHttpController() *HttpController {
 // @version 0.1.0
 // @BasePath /api/v1
 func main() {
-	if os.Getenv("PRODUCTION") == "true" {
-		gin.SetMode(gin.ReleaseMode)
-	}
+	// ? init kafka
+	defer kafkaWriter.Close()
 
 	router := NewHttpController()
 	router.Use(cors.Default())
@@ -40,8 +37,6 @@ func main() {
 		panic(err)
 	}
 	defer router.Database.Close()
-
-	// ? init red panda
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 

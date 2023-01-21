@@ -1,13 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	kafka "github.com/segmentio/kafka-go"
 	"github.com/sirupsen/logrus"
 )
+
+var kafkaWriter *kafka.Writer = getKafkaWriter("redpanda:9092", "shorter-url")
+
+func getKafkaWriter(kafkaURL, topic string) *kafka.Writer {
+	return &kafka.Writer{
+		Addr:     kafka.TCP(kafkaURL),
+		Topic:    topic,
+		Balancer: &kafka.LeastBytes{},
+	}
+}
 
 // @BasePath /api/v1
 
@@ -91,6 +103,16 @@ func (controller *HttpController) setNewLink(c *gin.Context) {
 	if err != nil {
 		logrus.Fatal(err)
 	}
+
+	err = kafkaWriter.WriteMessages(c, kafka.Message{
+		Key:   []byte("je sais pas"),
+		Value: []byte(link.Url),
+	})
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	fmt.Println("link : ", link)
 
 	c.JSON(http.StatusOK, gin.H{"data": link})
 }
