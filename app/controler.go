@@ -21,6 +21,31 @@ func getKafkaWriter(kafkaURL, topic string) *kafka.Writer {
 	}
 }
 
+func printTopics() {
+
+	fmt.Println("topic list:")
+
+	conn, err := kafka.Dial("tcp", "redpanda:9092")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer conn.Close()
+
+	partitions, err := conn.ReadPartitions()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	m := map[string]struct{}{}
+
+	for _, p := range partitions {
+		m[p.Topic] = struct{}{}
+	}
+	for k := range m {
+		fmt.Println("\t", k)
+	}
+}
+
 // @BasePath /api/v1
 
 // shorter-url godoc
@@ -104,12 +129,33 @@ func (controller *HttpController) setNewLink(c *gin.Context) {
 		logrus.Fatal(err)
 	}
 
-	err = kafkaWriter.WriteMessages(c, kafka.Message{
-		Key:   []byte("je sais pas"),
-		Value: []byte(link.Url),
-	})
+	// printTopics()
+
+	// ? Send a message to kafka
+	// err = kafkaWriter.WriteMessages(c,
+	// 	kafka.Message{
+	// 		Key:   []byte("je sais pas"),
+	// 		Value: []byte(link.Url),
+	// 	},
+	// )
+	// if err != nil {
+	// 	logrus.Error("failed to write messages:", err)
+	// }
+
+	conn, err := kafka.Dial("tcp", "redpanda:9092")
 	if err != nil {
-		logrus.Fatal(err)
+		panic(err.Error())
+	}
+	defer conn.Close()
+	// send a message to the topic "shorter-url"
+	_, err = conn.WriteMessages(
+		kafka.Message{
+			Key:   []byte("je sais pas"),
+			Value: []byte(link.Url),
+		},
+	)
+	if err != nil {
+		panic(err.Error())
 	}
 
 	fmt.Println("link : ", link)
