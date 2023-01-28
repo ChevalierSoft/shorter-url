@@ -18,16 +18,8 @@ func NewHttpController(db *bun.DB) *HttpController {
 	return &HttpController{Database: connectDB(), Engine: gin.New()}
 }
 
-// @title shorter-url API
-// @description This is a simple url shortener api
-// @version 0.1.0
-// @BasePath /api/v1
-func main() {
-	// if os.Getenv("PRODUCTION") == "true" {
-	// 	gin.SetMode(gin.ReleaseMode)
-	// }
-
-	db := connectDB()
+func SetRouter() HttpController {
+  db := connectDB()
 	err := createSchema(db)
 	if err != nil {
 		panic(err)
@@ -53,6 +45,14 @@ func main() {
 		}
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+  return *router
+}
 
+// @title shorter-url API
+// @description This is a simple url shortener api
+// @version 0.1.0
+// @BasePath /api/v1
+func main() {
+  router := SetRouter()
 	router.Run(":80")
 }
