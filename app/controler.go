@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -14,6 +15,12 @@ import (
 var kafkaWriter *kafka.Writer = getKafkaWriter("redpanda:9092", "shorter-url")
 
 func getKafkaWriter(kafkaURL, topic string) *kafka.Writer {
+	_, err := kafka.DialLeader(context.Background(), "tcp", "redpanda:9092", "moncul", 0)
+	if err != nil {
+		fmt.Println("ptn", err)
+		panic(err.Error())
+	}
+
 	return &kafka.Writer{
 		Addr:     kafka.TCP(kafkaURL),
 		Topic:    topic,
