@@ -7,7 +7,6 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	bun "github.com/uptrace/bun"
-	"os"
 )
 
 type HttpController struct {
