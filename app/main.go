@@ -7,7 +7,6 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	bun "github.com/uptrace/bun"
-	"os"
 )
 
 type HttpController struct {
@@ -19,16 +18,9 @@ func NewHttpController(db *bun.DB) *HttpController {
 	return &HttpController{Database: connectDB(), Engine: gin.New()}
 }
 
-// @title shorter-url API
-// @description This is a simple url shortener api
-// @version 0.1.0
-// @BasePath /api/v1
-func main() {
-	if os.Getenv("PRODUCTION") == "true" {
-		gin.SetMode(gin.ReleaseMode)
-	}
+func SetRouter() HttpController {
+  db := connectDB()
 
-	db := connectDB()
 	err := createSchema(db)
 	if err != nil {
 		panic(err)
@@ -44,7 +36,6 @@ func main() {
 	{
 		g1 := v1.Group("/l")
 		{
-			// ? if not in production
 			if gin.Mode() != gin.ReleaseMode {
 				// todo: add pagination
 				g1.GET("/", router.getLinks) // ? debug : get all links
@@ -54,6 +45,14 @@ func main() {
 		}
 	}
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+  return *router
+}
 
-	router.Run(":12345")
+// @title shorter-url API
+// @description This is a simple url shortener api
+// @version 0.1.0
+// @BasePath /api/v1
+func main() {
+  router := SetRouter()
+	router.Run(":80")
 }
