@@ -23,7 +23,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        go get ./app
+        go get app
 
     - name: Build
       run: go build -v ./app/...
