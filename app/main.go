@@ -7,6 +7,7 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	bun "github.com/uptrace/bun"
+	"os"
 )
 
 type HttpController struct {
@@ -20,6 +21,7 @@ func NewHttpController(db *bun.DB) *HttpController {
 
 func SetRouter() HttpController {
   db := connectDB()
+
 	err := createSchema(db)
 	if err != nil {
 		panic(err)
@@ -35,7 +37,6 @@ func SetRouter() HttpController {
 	{
 		g1 := v1.Group("/l")
 		{
-			// ? if not in production
 			if gin.Mode() != gin.ReleaseMode {
 				// todo: add pagination
 				g1.GET("/", router.getLinks) // ? debug : get all links

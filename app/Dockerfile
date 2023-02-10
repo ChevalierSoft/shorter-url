@@ -9,4 +9,4 @@ COPY ./setup.sh /go/src/app/
 ENTRYPOINT [ "./setup.sh" ]
 # ENTRYPOINT [ "./shorter-url" ]
 
-EXPOSE 80
+EXPOSE 12345
