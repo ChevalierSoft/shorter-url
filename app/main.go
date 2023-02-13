@@ -32,6 +32,8 @@ func SetRouter() HttpController {
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
+  router.GET("/", router.hello)
+
 	v1 := router.Group("/api/v1")
 	{
 		g1 := v1.Group("/l")
