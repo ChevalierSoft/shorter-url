@@ -14,8 +14,9 @@ services:
 
   shorter-url-api:
     build: 
-      context: ./app
       target: development
+      context: ./app
+      dockerfile: dev.Dockerfile
     restart: unless-stopped
     depends_on:
       - shorter-url-db

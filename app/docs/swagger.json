@@ -8,6 +8,22 @@
     },
     "basePath": "/api/v1",
     "paths": {
+        "/": {
+            "get": {
+                "description": "send back \"hello\" when the server is up",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/l": {
             "get": {
                 "description": "get every link in database when the api in not in production mode",

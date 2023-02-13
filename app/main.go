@@ -12,10 +12,11 @@ import (
 type HttpController struct {
 	*gin.Engine
 	Database *bun.DB
+  Url string
 }
 
 func NewHttpController(db *bun.DB) *HttpController {
-	return &HttpController{Database: connectDB(), Engine: gin.New()}
+  return &HttpController{Database: connectDB(), Engine: gin.New(), Url: "http://localhost:80/"}
 }
 
 func SetRouter() HttpController {

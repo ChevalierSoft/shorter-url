@@ -14,7 +14,7 @@ import (
 // shorter-url godoc
 // @Description send back "hello" when the server is up
 // @Produce json
-// @Success 200 {"message": "hello"}
+// @Success 200 {string} hello
 // @Router / [get]
 func (controller *HttpController) hello(c *gin.Context) {
   c.JSON(http.StatusOK, gin.H{"message": "hello"})
