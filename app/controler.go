@@ -75,7 +75,7 @@ func (controller *HttpController) getLink(c *gin.Context) {
 // @Description register a new link
 // @Produce json
 // @Param link body LinkDto true "Link to register"
-// @Success 200 {json} Link
+// @Success 200 {object} Link
 // @Failure 400 {string} string "Url is required"
 // @Failure 400 {string} string "Url is not valid"
 // @Router /l [post]

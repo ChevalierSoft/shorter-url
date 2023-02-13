@@ -1,5 +1,18 @@
 basePath: /api/v1
 definitions:
+  main.Link:
+    properties:
+      date:
+        type: string
+      id:
+        type: string
+      lastVisit:
+        type: string
+      url:
+        type: string
+      visits:
+        type: integer
+    type: object
   main.LinkDto:
     properties:
       url:
@@ -48,7 +61,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: json
+            $ref: '#/definitions/main.Link'
         "400":
           description: Url is not valid
           schema:

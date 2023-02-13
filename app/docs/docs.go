@@ -66,7 +66,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "json"
+                            "$ref": "#/definitions/main.Link"
                         }
                     },
                     "400": {
@@ -111,6 +111,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "main.Link": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "lastVisit": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "visits": {
+                    "type": "integer"
+                }
+            }
+        },
         "main.LinkDto": {
             "type": "object",
             "required": [

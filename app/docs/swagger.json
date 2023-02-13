@@ -59,7 +59,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "json"
+                            "$ref": "#/definitions/main.Link"
                         }
                     },
                     "400": {
@@ -104,6 +104,26 @@
         }
     },
     "definitions": {
+        "main.Link": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "lastVisit": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "visits": {
+                    "type": "integer"
+                }
+            }
+        },
         "main.LinkDto": {
             "type": "object",
             "required": [
